@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorry Madam G</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffe6e6;
+}
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff0f5;
+  padding: 30px;
+  border: 2px solid #ff99cc;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+h1 {
+  color: #ff3366;
+  margin-bottom: 20px;
+  font-size: 2.5em;
+  animation: pulse 1.5s infinite;
+}
+p { font-size: 1.2em; margin-bottom: 25px; }
+button {
+  padding: 12px 25px;
+  margin: 10px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  background: #ff6699;
+  color: white;
+}
+button:hover { transform: scale(1.1); }
+#messagePopup, #ringPopup, #reallySurePopup, #stillNotForgivePopup, #sorryPopup { display: none; }
+
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+.petal, .ring, .sorryEmoji {
+  position: absolute;
+  opacity: 0.8;
+}
+.petal { width: 15px; height: 15px; border-radius: 50%; background: pink; animation-name: fallPetal; animation-timing-function: linear; animation-iteration-count: infinite; }
+.redPetal { background: red; }
+.ring { background: url('https://i.ibb.co/0DgKzF7/ring.png') no-repeat center center; background-size: contain; width: 50px; height: 50px; }
+
+@keyframes fallPetal {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
+}
+
+@keyframes floatRing { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } 100% { transform: translateY(0) rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="popup" id="firstPopup">
+  <h1>SORRY</h1>
+  <p>Will you forgive me?</p>
+  <button id="yes">I forgive you ❤️</button>
+  <button id="no">I won't forgive you 😢</button>
+</div>
+
+<div class="popup" id="reallySurePopup">
+  <p>Are you really sure? 🥺</p>
+  <button id="forgiveYes">I forgive you ❤️</button>
+  <button id="forgiveNo">I won't forgive you 😭</button>
+</div>
+
+<div class="popup" id="messagePopup">
+  <p>WILL YOU BE MINE FOR EVER? ❤️</p>
+  <button id="yes2">I choose you 💖</button>
+  <button id="no2">Sorry, I can't 😢</button>
+</div>
+
+<div class="popup" id="sorryPopup">
+  <p>SORRY, NOT AVAILABLE FOR YOU. YOU ARE JUST MINE 😎</p>
+  <button id="thankYou">THANK YOU FOR CHOOSING ME 💖</button>
+</div>
+
+<div class="popup" id="ringPopup">
+  <h1 style="font-family: 'Cursive', 'Brush Script MT', serif; color: #ff3366; font-size: 2.5em; margin-bottom: 20px;">
+    This is for you, Madam G 💍
+  </h1>
+  <button id="madamG" style="font-family: 'Cursive', 'Brush Script MT', serif; font-size: 1.5em; padding: 15px 30px; background: #ff6699; color: white; border-radius: 12px;">
+    Take it 💍
+  </button>
+</div>
+
+<div class="popup" id="stillNotForgivePopup">
+  <p>Will you still not forgive me? 🥺</p>
+  <button id="forgiveFinally">I forgive you ❤️</button>
+  <button id="notForgive">I won't forgive you 😭</button>
+</div>
+
+<script>
+const firstPopup = document.getElementById('firstPopup');
+const reallySurePopup = document.getElementById('reallySurePopup');
+const messagePopup = document.getElementById('messagePopup');
+const ringPopup = document.getElementById('ringPopup');
+const stillNotForgivePopup = document.getElementById('stillNotForgivePopup');
+const sorryPopup = document.getElementById('sorryPopup');
+
+function createPetal(color='pink') {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    if(color==='red') petal.classList.add('redPetal');
+    petal.style.left = Math.random() * window.innerWidth + 'px';
+    petal.style.animationDuration = 5 + Math.random() * 5 + 's';
+    petal.style.width = 10 + Math.random() * 15 + 'px';
+    petal.style.height = petal.style.width;
+    document.body.appendChild(petal);
+    setTimeout(()=>{petal.remove();}, 10000);
+}
+
+function createRing() {
+    const ring = document.createElement('div');
+    ring.className = 'ring';
+    ring.style.left = (window.innerWidth/2 - 25) + 'px';
+    ring.style.top = '30%';
+    ring.style.animation = 'floatRing 3s infinite';
+    document.body.appendChild(ring);
+    setTimeout(()=>{ ring.remove(); },15000);
+}
+
+// Sorry emojis falling
+function createSorrySpam() {
+    const emojis = ["🥺","💔","🙏","😢","💖"];
+    let count = 1;
+    function spawnSorry() {
+        if(count <= 999){
+            const sorry = document.createElement('div');
+            sorry.innerText = `I’m Sorry ${count} ${emojis[Math.floor(Math.random()*emojis.length)]}`;
+            sorry.className = 'sorryEmoji';
+            sorry.style.left = Math.random()*(window.innerWidth-150)+'px';
+            sorry.style.top = '-30px';
+            sorry.style.fontSize = (12 + Math.random()*10) + 'px';
+            sorry.style.color = 'red';
+            sorry.style.fontWeight = 'bold';
+            document.body.appendChild(sorry);
+            let pos = -30;
+            const fallInterval = setInterval(()=>{
+                pos += 5 + Math.random()*5;
+                sorry.style.top = pos + 'px';
+                if(pos>window.innerHeight){ clearInterval(fallInterval); sorry.remove(); }
+            },20);
+            count++;
+            setTimeout(spawnSorry,2);
+        } else if(count === 1000){
+            const sorry = document.createElement('div');
+            sorry.innerText = `I’m Sorry 1000 🥺`;
+            sorry.className = 'sorryEmoji';
+            sorry.style.left = (window.innerWidth/2 - 50) + 'px';
+            sorry.style.top = '-30px';
+            sorry.style.fontSize = '24px';
+            sorry.style.color = 'red';
+            sorry.style.fontWeight = 'bold';
+            document.body.appendChild(sorry);
+            let pos = -30;
+            const fallInterval = setInterval(()=>{
+                pos += 8;
+                sorry.style.top = pos + 'px';
+                if(pos>window.innerHeight){
+                    clearInterval(fallInterval);
+                    sorry.remove();
+                    stillNotForgivePopup.style.display='block';
+                }
+            },15);
+        }
+    }
+    spawnSorry();
+}
+
+// Random move No button
+function moveButtonRandomly(btn){
+    btn.addEventListener('mouseover', ()=>{
+        btn.style.position='absolute';
+        btn.style.left = Math.random()*(window.innerWidth-100)+'px';
+        btn.style.top = Math.random()*(window.innerHeight-50)+'px';
+    });
+}
+
+// Popup flow
+document.getElementById('yes').addEventListener('click', () => {
+    firstPopup.style.display='none';
+    messagePopup.style.display='block';
+});
+document.getElementById('no').addEventListener('click', () => {
+    firstPopup.style.display='none';
+    reallySurePopup.style.display='block';
+});
+document.getElementById('forgiveYes').addEventListener('click', ()=>{
+    reallySurePopup.style.display='none';
+    messagePopup.style.display='block';
+});
+document.getElementById('forgiveNo').addEventListener('click', ()=>{
+    reallySurePopup.style.display='none';
+    createSorrySpam();
+});
+
+// WILL YOU BE MINE buttons
+document.getElementById('yes2').addEventListener('click', ()=>{
+    messagePopup.style.display='none';
+    ringPopup.style.display='block';
+});
+
+document.getElementById('no2').addEventListener('click', ()=>{
+    messagePopup.style.display='none';
+    sorryPopup.style.display='block';
+});
+
+// THANK YOU button leads to Madam G
+document.getElementById('thankYou').addEventListener('click', ()=>{
+    sorryPopup.style.display='none';
+    ringPopup.style.display='block';
+});
+
+document.getElementById('madamG').addEventListener('click', ()=>{
+    createRing();
+    for(let i=0;i<20;i++) createPetal('red');
+});
+
+// Still Not Forgive popup buttons
+document.getElementById('forgiveFinally').addEventListener('click', ()=>{
+    stillNotForgivePopup.style.display='none';
+    messagePopup.style.display='block';
+});
+moveButtonRandomly(document.getElementById('notForgive'));
+
+// Falling pink petals at start
+setInterval(()=>{createPetal('pink');},400);
+</script>
+
+</body>
+
+</html>
